@@ -1,0 +1,14 @@
+diff -Nura  php-5.3.7/ext/standard/info.c info.c 
+--- php-5.3.7/ext/standard/info.c       2011-08-21 14:49:09.000000000 +0000
++++ info.c      2011-08-21 14:38:48.000000000 +0000
+@@ -924,6 +924,10 @@
+                        zend_html_puts(zend_version, strlen(zend_version) TSRMLS_CC);
+                }
+                php_info_print_box_end();
++               php_info_print_box_start(0);
++               PUTS("This program was built by <a href=\"http://infong.info/\" target=\"_blank\">Infong</a>");
++               PUTS(!sapi_module.phpinfo_as_text?"<br />":"\n");
++               php_info_print_box_end();
+                efree(php_uname);
+        }
+

@@ -1,0 +1,129 @@
+#!/bin/bash
+
+# general config
+
+NGINX_CONFIG="/etc/nginx/conf/nginx.conf"
+
+. /etc/default/nginx
+
+# width:
+calc_columns () {
+  STAT_COL=80
+  if [[ ! -t 1 ]]; then
+    USECOLOR=""
+  elif [[ -t 0 ]]; then
+    # stty will fail when stdin isn't a terminal
+    STAT_COL=$(stty size)
+    # stty gives "rows cols"; strip the rows number, we just want columns  
+    STAT_COL=${STAT_COL##* }
+  elif tput cols &>/dev/null; then
+    # is /usr/share/terminfo already mounted, and TERM recognized?
+    STAT_COL=$(tput cols)
+  fi
+  if (( STAT_COL == 0 )); then
+    # if output was 0 (serial console), set default width to 80
+    STAT_COL=80
+    USECOLOR=""
+  fi
+
+  # we use 13 characters for our own stuff
+  STAT_COL=$(( STAT_COL - 13 ))
+
+  if [[ -t 1 ]]; then
+    SAVE_POSITION="\e[s"
+    RESTORE_POSITION="\e[u"
+    DEL_TEXT="\e[$(( STAT_COL ))G"
+  else
+    SAVE_POSITION=""
+    RESTORE_POSITION=""
+    DEL_TEXT=""
+  fi
+}
+
+calc_columns
+
+stat_fail() {
+  printf ${SAVE_POSITION}
+  printf $DEL_TEXT
+  printf "[\E[35mFAIL\E[m]"
+  printf "${RESTORE_POSITION}\n"
+}
+
+stat_die() {
+  printf ${SAVE_POSITION}
+  printf $DEL_TEXT
+  printf "[\E[31mERRO\E[m]"
+  printf "${RESTORE_POSITION}\n"
+}
+
+stat_done() {
+  printf ${SAVE_POSITION}
+  printf $DEL_TEXT
+  printf "[\E[32mDONE\E[m]"
+  printf "${RESTORE_POSITION}\n"
+}
+
+function check_config {
+  printf "Checking configuration"
+  /usr/sbin/nginx -t -q -c "$NGINX_CONFIG"
+  if [ $? -ne 0 ]; then
+    stat_die
+  else
+    stat_done
+  fi
+}
+
+
+case "$1" in
+  start)
+    check_config
+    $0 careless_start
+    ;;
+  careless_start)
+    printf "Starting Nginx"
+    if [ -s /var/run/nginx.pid ]; then
+      stat_fail
+      # probably ;)
+      printf "Nginx is already running"
+      stat_die
+     fi
+    /usr/sbin/nginx -c "$NGINX_CONFIG" &>/dev/null
+    if [ $? -ne 0 ]; then
+      stat_fail
+    else
+      stat_done
+    fi
+    ;;
+  stop)
+    printf "Stopping Nginx"
+    NGINX_PID=`cat /var/run/nginx.pid`
+    kill -QUIT $NGINX_PID &>/dev/null
+    if [ $? -ne 0 ]; then
+      stat_fail
+    else
+      for i in `seq 1 10`; do
+        [ -d /proc/$NGINX_PID ] || { stat_done; exit 0; }
+        sleep 1
+      done
+      stat_fail
+    fi
+    ;;
+  restart)
+    check_config
+    $0 stop
+    sleep 1
+    $0 careless_start
+    ;;
+  reload)
+    check_config
+    if [ -s /var/run/nginx.pid ]; then
+      printf "Reloading Nginx Configuration" kill -HUP `cat /var/run/nginx.pid`
+    fi
+    ;;
+  check)
+    check_config
+    ;;
+  *)
+    echo "usage: $0 {start|stop|restart|reload|check|careless_start}"
+esac
+
