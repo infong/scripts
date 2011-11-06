@@ -9,6 +9,15 @@
  
  ;;;;;;;;;;;;;;;;;;
  ; Global Options ;
+@@ -22,7 +22,7 @@
+ ; Pid file
+ ; Note: the default prefix is @EXPANDED_LOCALSTATEDIR@
+ ; Default Value: none
+-;pid = run/php-fpm.pid
++pid = run/php-fpm.pid
+
+ ; Error log file
+ ; Note: the default prefix is @EXPANDED_LOCALSTATEDIR@
 @@ -102,7 +102,8 @@
  ;                            specific port;
  ;   '/path/to/unix/socket' - to listen on a unix socket.
