@@ -88,7 +88,7 @@ EOF
     ln -s $_log_path $pkgdir/$_server_root/logs
     ln -s $_doc_root $pkgdir/$_server_root/html
 
-    install -D -m755 $srcdir/nginx $pkgdir/etc/rc.d/nginx
+    install -D -m755 $srcdir/nginx $pkgdir/etc/init.d/nginx
     install -D -m644 LICENSE $pkgdir/usr/share/licenses/nginx/LICENSE
     mkdir -p $pkgdir/etc/default
     echo "NGINX_CONFIG=/etc/nginx/conf/nginx.conf" >$pkgdir/etc/default/nginx
