@@ -1,0 +1,11 @@
+--- sapi/fpm/init.d.php-fpm.in    2011-07-04 23:22:56.000000000 +0200                                                                                        
++++ sapi/fpm/init.d.php-fpm.in    2011-08-12 16:56:23.686606725 +0200                
+@@ -15,7 +15,7 @@
+ 
+ php_fpm_BIN=@sbindir@/php-fpm
+ php_fpm_CONF=@sysconfdir@/php-fpm.conf
+-php_fpm_PID=@localstatedir@/run/php-fpm.pid
++php_fpm_PID=@localstatedir@/run/php-fpm/php-fpm.pid
+ 
+ 
+ php_opts="--fpm-config $php_fpm_CONF"

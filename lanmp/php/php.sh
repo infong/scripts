@@ -130,6 +130,7 @@ cd ${srcdir}/src/${pkgname}-${pkgver}
 patch -p1 -i ${srcdir}/suhosin-patch-${_suhosinver}.patch
 patch -p0 -i ${srcdir}/php.ini.patch
 patch -p0 -i ${srcdir}/php-fpm.conf.in.patch
+patch -p0 -i ${srcdir}/init.d.php-fpm.in.patch
 sed -i 's/PHP_EXTRA_VERSION=""/PHP_EXTRA_VERSION="-infong"/g' configure
 EXTENSION_DIR=/usr/lib/php/modules
 export EXTENSION_DIR
