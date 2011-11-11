@@ -9,26 +9,49 @@ pkgver=2.2.21
 build_fcgid=false
 fcgidver=2.3.6
 
+md5sums="1696ae62cd879ab1d4dd9ff021a470f2"
+
 depends=('libpcre3-dev' 'libssl-dev' 'libldap-dev' 'libdb-dev')
 mpmtype=('prefork' 'worker')
 srcdir=$(pwd)/apache
+pkgdir=$(pwd)/pkg
 
+echo -e "\E[1;32m==>\E[m Making package: ${pkgname}-${pkgver}"
+
+echo -e "\E[1;32m==>\E[m Installing depends packages"
 # install depends packages
 for i in ${depends[@]}; do
-        apt-get install -y ${i};
+    apt-get install -y ${i};
 done;
 
 # check file
 if [ -s ${srcdir}/${pkgname}-${pkgver}.tar.bz2 ]; then
-  echo -e "\E[1;32m${pkgname}-${pkgver}.tar.bz2 [found]\E[m"
+  echo -e "\E[1;32m==>\E[m${pkgname}-${pkgver}.tar.bz2 [Found]\E[m"
   else
-  echo -e "\E[1;31mWarning: ${pkgname}-${pkgver}.tar.bz2 not found. download now......\E[m"
-  wget -c http://www.apache.org/dist/httpd/httpd-${pkgver}.tar.bz2 -O apache/${pkgname}-${pkgver}.tar.bz2
+  echo -e "\E[1;33m==> Warning\E[m: ${pkgname}-${pkgver}.tar.bz2 not found. download now......\E[m"
+  wget -q -c http://www.apache.org/dist/httpd/httpd-${pkgver}.tar.bz2 -O apache/${pkgname}-${pkgver}.tar.bz2
 fi
 
+check() {
+	filemd5=$(md5sum ${srcdir}/${pkgname}-${pkgver}.tar.bz2| cut -d" " -f1)
+	echo -e "\E[1;32m==>\E[m Validating source files with md5sums..."
+	if [ "$filemd5" != "$md5sums" ]; then
+		echo -e "\E[1;34m ->\E[m ${pkgname}-${pkgver}.tar.bz2... Failed"
+		echo -e "\E[1;31m==> ERROR\E[m: One or more files did not pass the validity check!"
+		exit 1
+	else
+		echo -e "\E[1;34m ->\E[m ${pkgname}-${pkgver}.tar.bz2... Passed"
+		sleep 2
+	fi
+}
+
+check
+
+echo -e "\E[1;32m==>\E[m Extracting Sources..."
+echo -e "\E[1;34m ->\E[m Extracting ${pkgname}-${pkgver}.tar.gz with bsdtar"
 
 cd ${srcdir}
-tar jxvf ${pkgname}-${pkgver}.tar.bz2
+tar jxf ${pkgname}-${pkgver}.tar.bz2
 cd "${srcdir}/httpd-${pkgver}"
 
 sed -e 's#User daemon#User http#' \
@@ -60,6 +83,8 @@ cat >>config.layout<<EOF
 </Layout>
 EOF
 
+
+echo -e "\E[1;32m==>\E[m Starting build apr..."
 #build apr
 mkdir build-apr
 cd build-apr
@@ -71,6 +96,8 @@ make
 make install
 cd "${srcdir}/httpd-${pkgver}"
 
+
+echo -e "\E[1;32m==>\E[m Starting build apr-util..."
 # build apr-util
 mkdir build-apu
 cd build-apu
@@ -81,12 +108,13 @@ make
 make install
 cd "${srcdir}/httpd-${pkgver}"
 
+echo -e "\E[1;32m==>\E[m Starting build httpd..."
 # build httpd in mpm-prefork & mpm-worker
 for mpm in ${mpmtype[@]} ; do
         mkdir build-${mpm}
         pushd build-${mpm}
         ../configure --enable-layout=APACHE \
-		--enable-modules=all \
+                --enable-modules=all \
                 --enable-mods-shared=all \
                 --enable-so \
                 --enable-suexec \
@@ -108,20 +136,20 @@ for mpm in ${mpmtype[@]} ; do
                 --with-mpm=${mpm}
         make
         if [ "${mpm}" = "prefork" ]; then
-                make install
+            make dDESTDIR=$pkgdir install
         else
-                install -m755 httpd "/usr/sbin/httpd.${mpm}"
+            install -m755 httpd "$pkgdir/usr/sbin/httpd.${mpm}"
         fi
         popd
 done
 
-install -D -m755 "${srcdir}/init.d.httpd" "/etc/init.d/httpd"
+install -D -m755 "${srcdir}/init.d.httpd" "$pkgdir/etc/init.d/httpd"
 
 # symlinks for /etc/httpd
-ln -fs /var/log/httpd "/etc/httpd/logs"
-ln -fs /var/run/httpd "/etc/httpd/run"
-ln -fs /usr/lib/httpd/modules "/etc/httpd/modules"
-ln -fs /usr/lib/httpd/build "/etc/httpd/build"
+ln -fs /var/log/httpd "$pkgdir/etc/httpd/logs"
+ln -fs /var/run/httpd "$pkgdir/etc/httpd/run"
+ln -fs /usr/lib/httpd/modules "$pkgdir/etc/httpd/modules"
+ln -fs /usr/lib/httpd/build "$pkgdir/etc/httpd/build"
 
 # set sane defaults
 sed -e 's#/usr/lib/httpd/modules/#modules/#' \
@@ -130,21 +158,12 @@ sed -e 's#/usr/lib/httpd/modules/#modules/#' \
     -e 's|#\(Include conf/extra/httpd-languages.conf\)|\1|' \
     -e 's|#\(Include conf/extra/httpd-userdir.conf\)|\1|' \
     -e 's|#\(Include conf/extra/httpd-default.conf\)|\1|' \
-    -i "/etc/httpd/conf/httpd.conf"
+    -i "$pkgdir/etc/httpd/conf/httpd.conf"
 
+echo -e "\E[1;32m==>\E[m Adding http user, if it Failed, please add by yourself..."
 # add http user and group
 groupadd -g 99 http
 useradd -g 99 -u 99 -s /bin/false http
 
-echo -e "\E[1;32mdone!\E[m"
-
-if $build_fcgid; then
-    cd ${srcdir}
-    tar zxvf mod_fcgid-{$fcgidver}.tar.gz
-    cd mod_fcgid-{$fcgidver}
-    ./configure.apxs
-    make
-    install modules/fcgid/.libs/mod_fcgid.so /usr/lib/httpd/modules/mod_fcgid.so
-    #make install
-fi
+echo -e "\E[1;32m==>\E[m All Files Installed in $pkgdir, you can copy them to /"
 
