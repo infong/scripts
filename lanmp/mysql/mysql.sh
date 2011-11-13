@@ -52,7 +52,7 @@ echo -e "\E[1;32m==>\E[m Starting build()..."
 # Comment 2 lines below, if somethins wrong when building
 CFLAGS="-fPIC ${CFLAGS} -fno-strict-aliasing -DBIG_JOINS=1 -fomit-frame-pointer" \
 CXXFLAGS="-fPIC ${CXXFLAGS} -fno-strict-aliasing -DBIG_JOINS=1 -felide-constructors -fno-rtti" \
-cmake ../mysql-5.5.14 \
+cmake ../${pkgname}-${pkgver} \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DMANUFACTURER="MySQL" \
