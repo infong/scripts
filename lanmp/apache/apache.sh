@@ -26,7 +26,7 @@ done;
 
 # check file
 if [ -s ${srcdir}/${pkgname}-${pkgver}.tar.bz2 ]; then
-  echo -e "\E[1;32m==>\E[m${pkgname}-${pkgver}.tar.bz2 [Found]\E[m"
+  echo -e "\E[1;32m==>\E[m ${pkgname}-${pkgver}.tar.bz2 [Found]\E[m"
   else
   echo -e "\E[1;33m==> Warning\E[m: ${pkgname}-${pkgver}.tar.bz2 not found. download now......\E[m"
   wget -q -c http://www.apache.org/dist/httpd/httpd-${pkgver}.tar.bz2 -O apache/${pkgname}-${pkgver}.tar.bz2
@@ -136,7 +136,7 @@ for mpm in ${mpmtype[@]} ; do
                 --with-mpm=${mpm}
         make
         if [ "${mpm}" = "prefork" ]; then
-            make dDESTDIR=$pkgdir install
+            make DESTDIR=$pkgdir install
         else
             install -m755 httpd "$pkgdir/usr/sbin/httpd.${mpm}"
         fi
