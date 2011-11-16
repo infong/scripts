@@ -18,10 +18,16 @@ pkgdir=$(pwd)/pkg
 
 echo -e "\E[1;32m==>\E[m Making package: ${pkgname}-${pkgver}"
 
+if [ $(id -u) != "0" ]; then
+    echo -e "\E[1;31m==> Error:\E[m You should be root to run this script."
+    exit 1
+fi
+
 echo -e "\E[1;32m==>\E[m Installing depends packages"
+
 # install depends packages
 for i in ${depends[@]}; do
-    apt-get install -y ${i};
+    sudo apt-get install -y ${i};
 done;
 
 # check file

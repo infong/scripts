@@ -60,7 +60,7 @@ ARGV="$@"
 # 
 # the path to your httpd binary, including options if necessary
 HTTPD='/usr/sbin/httpd'
-UNDIR='/var/run/httpd'
+RUNDIR='/var/run/httpd'
 if [ ! -d ${RUNDIR} ]; then
    mkdir ${RUNDIR}
 fi

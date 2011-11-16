@@ -13,7 +13,7 @@ echo -e "\E[1;32m==>\E[m Making package: ${pkgname}-${pkgver}"
 
 echo -e "\E[1;32m==>\E[m Installing depends packages"
 for dep in ${depends[@]}; do
-        apt-get install -y ${dep};
+    sudo apt-get install -y ${dep};
 done;
 
 if [ -s ${srcdir}/${pkgname}-${pkgver}.tar.gz ]; then
