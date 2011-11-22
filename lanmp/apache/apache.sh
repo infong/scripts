@@ -5,10 +5,6 @@
 pkgname=httpd
 pkgver=2.2.21
 
-# build with mod_fcgid?
-build_fcgid=false
-fcgidver=2.3.6
-
 md5sums="1696ae62cd879ab1d4dd9ff021a470f2"
 
 depends=('libpcre3-dev' 'libssl-dev' 'libldap-dev' 'libdb-dev')
@@ -17,11 +13,6 @@ srcdir=$(pwd)/apache
 pkgdir=$(pwd)/pkg
 
 echo -e "\E[1;32m==>\E[m Making package: ${pkgname}-${pkgver}"
-
-if [ $(id -u) != "0" ]; then
-    echo -e "\E[1;31m==> Error:\E[m You should be root to run this script."
-    exit 1
-fi
 
 echo -e "\E[1;32m==>\E[m Installing depends packages"
 
@@ -89,29 +80,6 @@ cat >>config.layout<<EOF
 </Layout>
 EOF
 
-
-echo -e "\E[1;32m==>\E[m Starting build apr..."
-#build apr
-mkdir build-apr
-cd build-apr
-../srclib/apr/configure --prefix=/usr --includedir=/usr/include/apr-1 \
-    --with-installbuilddir=/usr/share/apr-1/build \
-    --enable-nonportable-atomics \
-    --with-devrandom=/dev/urandom
-make
-make install
-cd "${srcdir}/httpd-${pkgver}"
-
-
-echo -e "\E[1;32m==>\E[m Starting build apr-util..."
-# build apr-util
-mkdir build-apu
-cd build-apu
-../srclib/apr-util/configure --prefix=/usr --with-apr=/usr \
-    --without-pgsql --without-mysql --without-sqlite2 --without-sqlite3 \
-    --with-berkeley-db=/usr --with-gdbm=/usr --with-ldap
-make
-make install
 cd "${srcdir}/httpd-${pkgver}"
 
 echo -e "\E[1;32m==>\E[m Starting build httpd..."
@@ -136,8 +104,6 @@ for mpm in ${mpmtype[@]} ; do
                 --enable-proxy --enable-proxy-connect \
                 --enable-proxy-http --enable-proxy-ftp \
                 --enable-dbd \
-                --with-apr=/usr/bin/apr-1-config \
-                --with-apr-util=/usr/bin/apu-1-config \
                 --with-pcre=/usr \
                 --with-mpm=${mpm}
         make
