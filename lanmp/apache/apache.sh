@@ -97,7 +97,7 @@ for mpm in ${mpmtype[@]} ; do
                 --with-suexec-logfile=/var/log/httpd/suexec.log \
                 --with-suexec-bin=/usr/sbin/suexec \
                 --with-suexec-uidmin=99 --with-suexec-gidmin=99 \
-                --enable-ldap --enable-authnz-ldap \
+                --enable-ldap --with-ldap --enable-authnz-ldap \
                 --enable-cache --enable-disk-cache --enable-mem-cache --enable-file-cache \
                 --enable-ssl --with-ssl \
                 --enable-deflate --enable-cgid \
