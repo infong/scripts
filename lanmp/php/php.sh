@@ -32,7 +32,7 @@ fi
 
 if [ ! -s ${srcdir}/suhosin-patch-${_suhosinver}.patch.gz ];then
   echo -e "\E[1;33m==> Warning\E[m: Downloading suhosin-patch-${_suhosinver}.patch.gz \E[m"
-  wget -q -e ${sourcesuho} -O ${srcdir}/suhosin-patch-${_suhosinver}.patch.gz
+  wget -q -c ${sourcesuho} -O ${srcdir}/suhosin-patch-${_suhosinver}.patch.gz
 fi
 
 
