@@ -9,3 +9,7 @@ lanmp 自己写的一个编译 ANMP 的脚本，可用于装有 **Debian 6/Ubunt
   - 安装前请先将从源或其它方式安装的 mysql & apache & php & nginx 从系统移除
   - 编译顺序一般为 mysql(51) -> apache -> php -> nginx
   - 写得很挫，请见谅，但至少能用。
+
+### sysinfo
+
+  sysinfo.php 是一个用 PHP 完成的查看服务器系统信息的脚本，目前适用于 Linux/FreeBSD/Windows 三个平台的服务器。
