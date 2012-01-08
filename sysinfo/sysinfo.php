@@ -1246,4 +1246,5 @@ page load in <?php echo round((CommonFunctions::microTimeFloat() - $time_start) 
 </pre>
     </div>
 </div>
+    </body>
 </html>
