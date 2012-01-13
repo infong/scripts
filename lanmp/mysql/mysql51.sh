@@ -66,7 +66,7 @@ CXXFLAGS="-fPIC ${CXXFLAGS} -fno-strict-aliasing -DBIG_JOINS=1 -felide-construct
     --with-unix-socket-path=/var/run/mysqld/mysqld.sock \
     --enable-local-infile \
     --with-plugins=innobase,innodb_plugin \
-    --datadia=/var/lib/mysql
+    --datadir=/var/lib/mysql
 
 make
 
