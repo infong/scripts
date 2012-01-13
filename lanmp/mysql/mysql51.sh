@@ -1,13 +1,13 @@
 #!/bin/bash
 
 pkgname=mysql
-pkgver=5.1.60
+pkgver=5.1.61
 url="http://www.mysql.com/"
 srcdir=$(pwd)/mysql51
 depends=('openssl' 'libssl-dev' 'zlib1g-dev' 'libncurses5-dev')
 source=("http://mysql.he.net/Downloads/MySQL-5.1/${pkgname}-${pkgver}.tar.gz")
 
-md5sums="076d61d5f9b0de4e51b6c48a5e576035"
+md5sums="4efd10c69c4c99dbdb8fae3834a6d7b8"
 
 echo -e "\E[1;32m==>\E[m Making package: ${pkgname}-${pkgver}"
 
@@ -65,7 +65,8 @@ CXXFLAGS="-fPIC ${CXXFLAGS} -fno-strict-aliasing -DBIG_JOINS=1 -felide-construct
     --with-embedded-server \
     --with-unix-socket-path=/var/run/mysqld/mysqld.sock \
     --enable-local-infile \
-    --with-plugins=innobase,innodb_plugin
+    --with-plugins=innobase,innodb_plugin \
+    --datadia=/var/lib/mysql
 
 make
 
