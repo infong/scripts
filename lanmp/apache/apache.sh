@@ -3,9 +3,9 @@
 # build Apache2
 
 pkgname=httpd
-pkgver=2.2.21
+pkgver=2.2.22
 
-md5sums="1696ae62cd879ab1d4dd9ff021a470f2"
+md5sums="9fe3093194c8a57f085ff7c3fc43715f"
 
 depends=('libpcre3-dev' 'libssl-dev' 'libldap-dev' 'libdb-dev')
 mpmtype=('prefork' 'worker')
@@ -81,7 +81,7 @@ cat >>config.layout<<EOF
 EOF
 
 cd "${srcdir}/httpd-${pkgver}"
-
+patch -p1 -i "${srcdir}/pcre_info.patch"
 echo -e "\E[1;32m==>\E[m Starting build httpd..."
 # build httpd in mpm-prefork & mpm-worker
 for mpm in ${mpmtype[@]} ; do
