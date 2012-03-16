@@ -12,13 +12,13 @@ srcdir=$(pwd)/nginx
 pkgdir=$(pwd)/pkg
 
 pkgname=nginx
-pkgver=1.0.13
+pkgver=1.0.14
 pkgdesc="lightweight HTTP server and IMAP/POP3 proxy server"
 depends=('libpcre3-dev' 'zlib1g-dev' 'libssl-dev')
 url="http://nginx.org"
 source="http://nginx.org/download/${pkgname}-${pkgver}.tar.gz"
 
-md5sums="58360774e4875e8fc4c4286448cb54d0"
+md5sums="019844e48c34952253ca26dd6e28c35c"
 
 echo -e "\E[1;32m==>\E[m Making package: ${pkgname}-${pkgver}"
 
