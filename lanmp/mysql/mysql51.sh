@@ -1,13 +1,13 @@
 #!/bin/bash
 
 pkgname=mysql
-pkgver=5.1.61
+pkgver=5.1.62
 url="http://www.mysql.com/"
 srcdir=$(pwd)/mysql51
 depends=('openssl' 'libssl-dev' 'zlib1g-dev' 'libncurses5-dev')
 source=("http://mysql.he.net/Downloads/MySQL-5.1/${pkgname}-${pkgver}.tar.gz")
 
-md5sums="4efd10c69c4c99dbdb8fae3834a6d7b8"
+md5sums="58843ac04d3e8bb6ff973938e7e88a28"
 
 echo -e "\E[1;32m==>\E[m Making package: ${pkgname}-${pkgver}"
 
