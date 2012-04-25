@@ -74,7 +74,9 @@ build() {
         --with-http_sub_module \
         --with-ipv6 \
         --http-scgi-temp-path=${_tmp_path} \
-        --http-uwsgi-temp-path=${_tmp_path}
+        --http-uwsgi-temp-path=${_tmp_path} \
+        --with-pcre-jit \
+        --with-http_realip_module
         #--add-module=/usr/lib/passenger/ext/nginx \
         #--with-http_mp4_module \
         #--with-http_realip_module \
