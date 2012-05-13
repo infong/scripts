@@ -2,15 +2,15 @@
 # php
 
 pkgname=php
-pkgver=5.3.10
-_suhosinver=5.3.9-0.9.10
+pkgver=5.4.3
+
 url='http://www.php.net'
-depends=('libxml2' 'libxml2-dev' 'libsqlite-dev' 'libsqlite-dev' 'libsqlite3-dev' 'sqlite' 'sqlite3' 'libdb-dev' 'libqdbm-dev' 'libc-client-dev' 'bzip2' 'lib32bz2-1.0' 'libncurses5-dev' 'zlib1g-dev' 'libxml2-dev' 'libssl-dev' 'libpng12-dev' 'libjpeg-dev' 'libfreetype6-dev' 'libfreetype6' 'libcurl3' 'zlibc' 'zlib1g' 'openssl' 'mcrypt' 'libxml2' 'libtool' 'libsasl2-dev' 'libpq-dev' 'libpq5' 'libpng-dev' 'libpng3' 'libpng12-0' 'libpcrecpp0' 'libpcre3-dev' 'libpcre3' 'libncurses5' 'libmhash-dev' 'libmhash2' 'libmcrypt-dev' 'libltdl-dev' 'libltdl3-dev' 'libjpeg62-dev' 'libjpeg62' 'libglib2.0-dev' 'libglib2.0-0' 'libevent-dev' 'libcurl4-openssl-dev' 'libc-client-dev' 'libbz2-dev' 'libbz2-1.0' 'gettext' 'curl' 'libgdbm-dev' 'libenchant-dev' 'libicu-dev' 'libgmp3-dev'  'unixodbc-dev' 'unixodbc' 'freetds-dev' 'libpspell-dev' 'libreadline-dev' 'libsnmp-dev' 'libtidy-dev' 'libxslt-dev' 'libexpat1-dev')
+depends=('libxml2' 'libxml2-dev' 'libsqlite-dev' 'libsqlite-dev' 'libsqlite3-dev' 'sqlite' 'sqlite3' 'libdb-dev' 'libqdbm-dev' 'libc-client-dev' 'bzip2' 'lib32bz2-1.0' 'libncurses5-dev' 'zlib1g-dev' 'libxml2-dev' 'libssl-dev' 'libpng12-dev' 'libjpeg-dev' 'libfreetype6-dev' 'libfreetype6' 'libcurl3' 'zlibc' 'zlib1g' 'openssl' 'mcrypt' 'libxml2' 'libtool' 'libsasl2-dev' 'libpq-dev' 'libpq5' 'libpng-dev' 'libpng3' 'libpng12-0' 'libpcrecpp0' 'libpcre3-dev' 'libpcre3' 'libncurses5' 'libmhash-dev' 'libmhash2' 'libmcrypt-dev' 'libltdl-dev' 'libltdl3-dev' 'libjpeg62-dev' 'libjpeg62' 'libglib2.0-dev' 'libglib2.0-0' 'libevent-dev' 'libcurl4-openssl-dev' 'libc-client-dev' 'libbz2-dev' 'libbz2-1.0' 'gettext' 'curl' 'libgdbm-dev' 'libenchant-dev' 'libicu-dev' 'libgmp3-dev'  'unixodbc-dev' 'unixodbc' 'freetds-dev' 'libpspell-dev' 'libreadline-dev' 'libsnmp-dev' 'libtidy-dev' 'libxslt-dev' 'libexpat1-dev' 'libvpx-dev')
 srcdir=$(pwd)/php
 currdir=$(pwd)
 pkgdir=${currdir}/pkg
 
-md5sums="816259e5ca7d0a7e943e56a3bb32b17f"
+md5sums="51f9488bf8682399b802c48656315cac"
 
 echo -e "\E[1;32m==>\E[m Making package: ${pkgname}-${pkgver}"
 
@@ -21,18 +21,12 @@ done;
 
 
 source=("http://www.php.net/distributions/${pkgname}-${pkgver}.tar.bz2")
-sourcesuho=("http://download.suhosin.org/suhosin-patch-${_suhosinver}.patch.gz")
 
 if [ -s ${srcdir}/${pkgname}-${pkgver}.tar.bz2 ]; then
   echo -e "\E[1;32m==>\E[m ${pkgname}-${pkgver}.tar.bz2 [found]\E[m"
 else
   echo -e "\E[1;33m==> Warning\E[m: ${pkgname}-${pkgver}.tar.bz2 not found. download now......\E[m"
   wget -q -c ${source} -O ${srcdir}/${pkgname}-${pkgver}.tar.bz2
-fi
-
-if [ ! -s ${srcdir}/suhosin-patch-${_suhosinver}.patch.gz ];then
-  echo -e "\E[1;33m==> Warning\E[m: Downloading suhosin-patch-${_suhosinver}.patch.gz \E[m"
-  wget -q -c ${sourcesuho} -O ${srcdir}/suhosin-patch-${_suhosinver}.patch.gz
 fi
 
 
@@ -55,17 +49,14 @@ export LDFLAGS="${LDFLAGS//-Wl,--as-needed}"
 export LDFLAGS="${LDFLAGS//,--as-needed}"
 
 phpconfig="--srcdir=../${pkgname}-${pkgver} \
+	--config-cache \
 	--prefix=/usr \
 	--sysconfdir=/etc/php \
 	--localstatedir=/var \
 	--with-layout=GNU \
 	--with-config-file-path=/etc/php \
 	--with-config-file-scan-dir=/etc/php/conf.d \
-	--enable-inline-optimization \
-	--disable-debug \
 	--disable-rpath \
-	--disable-static \
-	--enable-shared \
 	--mandir=/usr/share/man \
 	--without-pear \
 	"
@@ -77,38 +68,31 @@ phpextensions="--enable-bcmath=shared \
 	--enable-ftp=shared \
 	--enable-gd-native-ttf \
 	--enable-intl=shared \
-	--enable-json=shared \
-	--enable-mbregex \
 	--enable-mbstring \
-	--enable-pdo \
 	--enable-phar=shared \
 	--enable-posix=shared \
-	--enable-session \
 	--enable-shmop=shared \
 	--enable-soap=shared \
 	--enable-sockets=shared \
-	--enable-sqlite-utf8 \
 	--enable-sysvmsg=shared \
 	--enable-sysvsem=shared \
 	--enable-sysvshm=shared \
-	--enable-xml \
 	--enable-zip=shared \
-	--enable-wddx=shared \
-	--with-libexpat-dir
 	--with-bz2=shared \
 	--with-curl=shared \
 	--with-db4=/usr \
 	--with-enchant=shared,/usr \
-	--with-freetype-dir=shared,/usr \
+	--with-freetype-dir=/usr \
 	--with-gd=shared \
-	--with-gdbm=shared \
+	--with-gdbm \
 	--with-gettext=shared \
 	--with-gmp=shared \
 	--with-iconv=shared \
 	--with-icu-dir=/usr \
-	--with-imap-ssl=shared \
+	--with-imap-ssl \
 	--with-imap=shared \
-	--with-jpeg-dir=shared,/usr \
+	--with-jpeg-dir=/usr \
+	--with-vpx-dir=/usr \
 	--with-ldap=shared \
 	--with-ldap-sasl \
 	--with-mcrypt=shared \
@@ -124,26 +108,19 @@ phpextensions="--enable-bcmath=shared \
 	--with-pdo-pgsql=shared \
 	--with-pdo-sqlite=shared,/usr \
 	--with-pgsql=shared \
-	--with-png-dir=shared,/usr \
+	--with-png-dir=/usr \
 	--with-pspell=shared \
-	--with-regex=php \
 	--with-snmp=shared \
 	--with-sqlite3=shared,/usr \
-	--with-sqlite=shared \
 	--with-tidy=shared \
 	--with-unixODBC=shared,/usr \
 	--with-xmlrpc=shared \
 	--with-xsl=shared \
 	--with-zlib \
-	--without-db2 \
-	--without-db3 \
 	--with-kerberos \
 	"
 
 cd ${srcdir}
-if [ ! -f suhosin-patch-${_suhosinver}.patch ]; then
-  gzip -d suhosin-patch-${_suhosinver}.patch.gz
-fi
 
 echo -e "\E[1;32m==>\E[m Extracting Sources..."
 echo -e "\E[1;34m ->\E[m Extracting ${pkgname}-${pkgver}.tar.bz2 with bsdtar"
@@ -152,12 +129,12 @@ tar jxf ${pkgname}-${pkgver}.tar.bz2 -C ${srcdir}/src/
 cd ${srcdir}/src/${pkgname}-${pkgver}
 
 echo -e "\E[1;32m==>\E[m Patching..."
-#patch -p1 -i ${srcdir}/suhosin-patch-${_suhosinver}.patch
-sed 's/1997-2011/1997-2012/g' ${srcdir}/suhosin-patch-${_suhosinver}.patch | patch -p1
+
 patch -p0 -i ${srcdir}/php.ini.patch
 patch -p0 -i ${srcdir}/php-fpm.conf.in.patch
-patch -p0 -i ${srcdir}/init.d.php-fpm.in.patch
+
 #sed -i 's/PHP_EXTRA_VERSION=""/PHP_EXTRA_VERSION="-infong"/g' configure
+
 EXTENSION_DIR=/usr/lib/php/modules
 export EXTENSION_DIR
 PEAR_INSTALLDIR=/usr/share/pear
@@ -212,15 +189,15 @@ cd ${srcdir}/build-fpm
 	${phpextensions}
 make
 
-echo -e "\E[1;32m==>\E[m Starting build php-embed..."
-# embed
-cp -a ${srcdir}/build-php ${srcdir}/build-embed
-cd ${srcdir}/build-embed
-./configure ${phpconfig} \
-	--disable-cli \
-	--enable-embed=shared \
-	${phpextensions}
-make
+#echo -e "\E[1;32m==>\E[m Starting build php-embed..."
+## embed
+#cp -a ${srcdir}/build-php ${srcdir}/build-embed
+#cd ${srcdir}/build-embed
+#./configure ${phpconfig} \
+#	--disable-cli \
+#	--enable-embed=shared \
+#	${phpextensions}
+#make
 
 echo -e "\E[1;32m==>\E[m Starting build pear..."
 # pear
@@ -265,15 +242,16 @@ package() {
 #	install -D -m644 ${srcdir}/logrotate.d.php-fpm ${pkgdir}/etc/logrotate.d/php-fpm
 	install -d -m755 ${pkgdir}/etc/php/fpm.d
 
-	pkgdesc='Embed SAPI for PHP'
+#	pkgdesc='Embed SAPI for PHP'
 
-	install -D -m755 ${srcdir}/build-embed/libs/libphp5.so ${pkgdir}/usr/lib/libphp5.so
-	install -D -m644 ${srcdir}/${pkgbase}-${pkgver}/sapi/embed/php_embed.h ${pkgdir}/usr/include/php/sapi/embed/php_embed.h
+#	install -D -m755 ${srcdir}/build-embed/libs/libphp5.so ${pkgdir}/usr/lib/libphp5.so
+#	install -D -m644 ${srcdir}/${pkgbase}-${pkgver}/sapi/embed/php_embed.h ${pkgdir}/usr/include/php/sapi/embed/php_embed.h
 
 	pkgdesc='PHP Extension and Application Repository'
 
 	cd ${srcdir}/build-pear
 	make -j1 install-pear INSTALL_ROOT=${pkgdir}
+	rm -rf ${pkgdir}/usr/share/pear/.{channels,depdb,depdblock,filemap,lock,registry}
 	echo -e "\E[1;32m==>\E[m All Files Installed in $pkgdir, you can copy them to /"
 }
 
