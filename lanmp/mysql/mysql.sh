@@ -3,13 +3,13 @@
 # Build mysql 
 
 pkgname=mysql
-pkgver=5.5.24
+pkgver="5.5.25a"
 url="http://www.mysql.com/"
 srcdir=$(pwd)/mysql
 depends=('cmake' 'openssl' 'libssl-dev' 'zlib1g-dev' 'libncurses5-dev' 'bison')
 source=("http://mysql.he.net/Downloads/MySQL-5.5/${pkgname}-${pkgver}.tar.gz")
 
-md5sums="dc84f8a0305e054c859533944e79f803"
+md5sums="0841fbc79872c5f467d8c8842f45257a"
 
 echo -e "\E[1;32m==>\E[m Making package: ${pkgname}-${pkgver}"
 
