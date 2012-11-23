@@ -12,13 +12,13 @@ srcdir=$(pwd)/nginx
 pkgdir=$(pwd)/pkg
 
 pkgname=nginx
-pkgver=1.2.3
+pkgver=1.2.5
 pkgdesc="lightweight HTTP server and IMAP/POP3 proxy server"
 depends=('libpcre3-dev' 'zlib1g-dev' 'libssl-dev')
 url="http://nginx.org"
 source="http://nginx.org/download/${pkgname}-${pkgver}.tar.gz"
 
-md5sums="0a986e60826d9e3b453dbefc36bf8f6c"
+md5sums="4f5a55187a3d45fa37d99d07ddd90800"
 
 echo -e "\E[1;32m==>\E[m Making package: ${pkgname}-${pkgver}"
 
@@ -76,7 +76,8 @@ build() {
         --http-scgi-temp-path=${_tmp_path} \
         --http-uwsgi-temp-path=${_tmp_path} \
         --with-pcre-jit \
-        --with-http_realip_module
+        --with-http_realip_module \
+        #--add-module=/home/infong/.rvm/gems/ruby-1.9.3-p194/gems/passenger-3.0.17/ext/nginx
         #--add-module=/usr/lib/passenger/ext/nginx \
         #--with-http_mp4_module \
         #--with-http_realip_module \
@@ -89,7 +90,7 @@ build() {
         #--with-http_random_index_module \
         #--with-http_secure_link_module \
         #--with-http_degradation_module \
-        #--with-http_perl_module \
+        --with-http_perl_module
 
     make
 }
