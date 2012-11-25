@@ -2,7 +2,7 @@
 # php
 
 pkgname=php
-pkgver=5.4.8
+pkgver=5.4.9
 
 url='http://www.php.net'
 depends=('libxml2' 'libxml2-dev' 'libsqlite-dev' 'libsqlite-dev' 'libsqlite3-dev' 'sqlite' 'sqlite3' 'libdb-dev' 'libqdbm-dev' 'libc-client-dev' 'bzip2' 'lib32bz2-1.0' 'libncurses5-dev' 'zlib1g-dev' 'libxml2-dev' 'libssl-dev' 'libpng12-dev' 'libjpeg-dev' 'libfreetype6-dev' 'libfreetype6' 'libcurl3' 'zlibc' 'zlib1g' 'openssl' 'mcrypt' 'libxml2' 'libtool' 'libsasl2-dev' 'libpq-dev' 'libpq5' 'libpng-dev' 'libpng3' 'libpng12-0' 'libpcrecpp0' 'libpcre3-dev' 'libpcre3' 'libncurses5' 'libmhash-dev' 'libmhash2' 'libmcrypt-dev' 'libltdl-dev' 'libltdl3-dev' 'libjpeg62-dev' 'libjpeg62' 'libglib2.0-dev' 'libglib2.0-0' 'libevent-dev' 'libcurl4-openssl-dev' 'libc-client-dev' 'libbz2-dev' 'libbz2-1.0' 'gettext' 'curl' 'libgdbm-dev' 'libenchant-dev' 'libicu-dev' 'libgmp3-dev'  'unixodbc-dev' 'unixodbc' 'freetds-dev' 'libpspell-dev' 'libreadline-dev' 'libsnmp-dev' 'libtidy-dev' 'libxslt-dev' 'libexpat1-dev' 'libvpx-dev')
@@ -10,7 +10,7 @@ srcdir=$(pwd)/php
 currdir=$(pwd)
 pkgdir=${currdir}/pkg
 
-md5sums="bb8c816a9299be8995255ef70c63b800"
+md5sums="076a9f84d861d3f664a2878d5773ba78"
 
 echo -e "\E[1;32m==>\E[m Making package: ${pkgname}-${pkgver}"
 
