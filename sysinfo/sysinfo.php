@@ -906,6 +906,13 @@ class FreeBSD extends OS
         }
     }
 
+    private function _uptime()
+    {
+        $s = preg_split('/ /', $this->grabkey('kern.boottime'));
+        $a = preg_replace('/,/', '', $s[3]);
+        $this->sys->setUptime(time() - $a);
+    }
+
     public function readdmesg()
     {
         if (count($this->_dmesg) === 0) {
@@ -1037,6 +1044,7 @@ class FreeBSD extends OS
         $this->_hostname();
         $this->_ip();
         $this->_network();
+        $this->_uptime();
     }
 }
 
@@ -1124,14 +1132,14 @@ class ServerInfo
     }
 }
 
-switch(PHP_OS) {
-    case "Linux":
+switch(strtolower(PHP_OS)) {
+    case "linux":
         $os = new LinuxOS();
         break;
-    case "FreeBSD":
+    case "freebsd":
         $os = new FreeBSD();
         break;
-    case "WINNT":
+    case "winnt":
         $os = new WinNT();
         break;
     default:
