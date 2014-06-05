@@ -79,4 +79,4 @@ echo "==> mkdir webroot directory"
 mkdir -p $serverroot/$domain_nowww/htdocs
 
 echo "==> restart Nginx"
-/etc/init.d/nginx retart
+/etc/init.d/nginx restart
